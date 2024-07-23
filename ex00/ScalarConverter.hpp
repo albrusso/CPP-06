@@ -2,9 +2,11 @@
 #include <string>
 #include <limits>
 #include <iomanip>
-#include <cctype> // per isprint
-#include <cstdlib> // per std::strtof, std::strtod
-#include <sstream> // per std::stringstream
+#include <cctype>
+#include <cstdlib>
+#include <sstream> 
+#include <limits.h>
+#include <cerrno>
 
 class ScalarConverter {
 private:

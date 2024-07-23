@@ -6,7 +6,7 @@
 #    By: albrusso <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/07/15 15:36:43 by albrusso          #+#    #+#              #
-#    Updated: 2024/07/22 16:38:06 by albrusso         ###   ########.fr        #
+#    Updated: 2024/07/23 19:04:06 by albrusso         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -72,6 +72,6 @@ run: $(NAME)
 	./$(NAME)
 
 mem: $(NAME)
-		valgrind --leak-check=full ./$(NAME)
+		valgrind --leak-check=full ./$(NAME) "ciao"
 
 .PHONY: all clean fclean re run mem

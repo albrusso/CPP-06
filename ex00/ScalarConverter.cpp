@@ -6,7 +6,7 @@
 /*   By: albrusso <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/21 11:12:50 by albrusso          #+#    #+#             */
-/*   Updated: 2024/07/22 16:48:30 by albrusso         ###   ########.fr       */
+/*   Updated: 2024/07/23 19:03:30 by albrusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,31 +88,36 @@ void printDouble(double d, std::string s)
 
 void ScalarConverter::convert(const std::string &s)
 {
-	if (s.length() == 1 && (s[0] > 32 && s[0] < 126) && !std::isdigit(s[0]))
-	{
-		char c = s[0];
-		std::cout << "char: '" << s[0] << "'" << std::endl;
-		std::cout << "int: " << static_cast<int> (c) << std::endl;
-		std::cout << "float: " << std::fixed << std::setprecision(1) << static_cast<float> (c) << "f" << std::endl;
-		std::cout << "double: '" << std::fixed << std::setprecision(1) << static_cast<double> (c) << std::endl;
-		return ;
-	}
-	try
-	{
-		double d;
-		if (s == "-inff" || s == "+inff" || s == "nanf")
-			d = std::strtof(s.c_str(), nullptr);
-		else if (s == "-inf" || s == "+inf" || s == "nan")
-			d = std::stod(s.c_str(), nullptr);
-		else
-			d = std::stod(s.c_str(), nullptr);
-		printChar(d);
-		printInt(d);
-		printFloat(d, s);
-		printDouble(d, s);
-	}
-	catch(const std::exception& e)
-	{
-		std::cout << "Invalid literal argument" << '\n';
-	}
+    if (s.length() == 1 && (s[0] > 32 && s[0] < 126) && !std::isdigit(s[0])) {
+        char c = s[0];
+        std::cout << "char: '" << s[0] << "'" << std::endl;
+        std::cout << "int: " << static_cast<int>(c) << std::endl;
+        std::cout << "float: " << static_cast<float>(c) << "f" << std::endl;
+        std::cout << "double: " << static_cast<double>(c) << std::endl;
+        return;
+    }
+
+    // Gestione delle conversioni
+    char* end;
+    errno = 0;  // Reset errno before conversion
+    double d;
+
+    if (strcmp(s.c_str(), "-inff") == 0 || strcmp(s.c_str(), "+inff") == 0 || strcmp(s.c_str(), "nanf") == 0) {
+        d = static_cast<double>(strtof(s.c_str(), &end));
+    } else if (strcmp(s.c_str(), "-inf") == 0 || strcmp(s.c_str(), "+inf") == 0 || strcmp(s.c_str(), "nan") == 0) {
+        d = strtod(s.c_str(), &end);
+    } else {
+        d = strtod(s.c_str(), &end);
+    }
+
+    // Verifica errori di conversione
+    if (errno == ERANGE || (*end != '\0' && *end != 'f')) {
+        std::cout << "Invalid literal argument" << std::endl;
+        return;
+    }
+
+    printChar(d);
+    printInt(d);
+    printFloat(d, s);
+    printDouble(d, s);
 }

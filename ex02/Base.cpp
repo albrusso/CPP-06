@@ -6,7 +6,7 @@
 /*   By: albrusso <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 17:35:15 by albrusso          #+#    #+#             */
-/*   Updated: 2024/07/22 18:07:37 by albrusso         ###   ########.fr       */
+/*   Updated: 2024/07/23 19:06:48 by albrusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ Base::~Base(void)
 
 Base * generate(void)
 {
-	std::srand(static_cast <unsigned int> (std::time(nullptr)));
+	std::srand(static_cast <unsigned int> (std::time(NULL)));
 	int n = std::rand() % 3;
 	switch (n)
 	{
@@ -30,7 +30,7 @@ Base * generate(void)
 		case 2:
 			return new C();
 		default:
-			return nullptr;
+			return NULL;
 	}
 }
 
@@ -44,30 +44,32 @@ void identify(Base* p)
 		std::cout << "p point at type C" << std::endl;
 }
 
-void identify(Base& p)
-{
-	try
-	{
-        A &a = dynamic_cast <A&> (p);
-        std::cout << "p is a reference at type A" << std::endl;
-		(void)a;
-    } catch (std::bad_cast &bc)
-	{
-	}
-    try
-	{
-        B &b = dynamic_cast <B&> (p);
-        std::cout << "p is a reference at type B" << std::endl;
-		(void)b;
-    } catch (std::bad_cast& bc)
-	{
-	}
-    try
-	{
-        C &c = dynamic_cast <C&> (p);
-        std::cout << "p is a reference at type C" << std::endl;
-		(void)c;
-    } catch (std::bad_cast &bc)
-	{
-	}
+void identify(Base& p) {
+    try {
+        A& a = dynamic_cast<A&>(p);
+        std::cout << "p is a reference to type A" << std::endl;
+        (void)a;  // Evita l'avviso di variabile non utilizzata
+        return;   // Se il cast ha successo, esci dalla funzione
+    } catch (...) {
+        // Se il cast fallisce, controlla il prossimo tipo
+    }
+
+    try {
+        B& b = dynamic_cast<B&>(p);
+        std::cout << "p is a reference to type B" << std::endl;
+        (void)b;
+        return;
+    } catch (...) {
+        // Se il cast fallisce, controlla il prossimo tipo
+    }
+
+    try {
+        C& c = dynamic_cast<C&>(p);
+        std::cout << "p is a reference to type C" << std::endl;
+        (void)c;
+        return;
+    } catch (...) {
+        // Se il cast fallisce, gestisci il caso sconosciuto
+        std::cout << "p is of unknown type" << std::endl;
+    }
 }
